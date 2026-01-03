@@ -1,1 +1,6 @@
-RoomID, X, Y, Title, ImagePrompt, Description, Item
+RoomID,X,Y,Title,ImagePrompt,Description,Item
+Start,0,0,The Castle Gates,A majestic stone castle entrance with a lowered drawbridge and banners flying,You stand before the gates of Eldoria. The kingdom is quiet... too quiet.,Steel Gauntlets
+N1,0,1,The Great Hall,A vast hall with high vaulted ceilings and dust motes dancing in shafts of light,The hall is empty. A single silver key glimmers on the throne.,Silver Key
+E1,1,0,The Royal Stables,Dilapidated wooden stables with straw scattered and a single white horse,The horses are gone but you find a sturdy shield leaning against a stall.,Iron Shield
+W1,-1,0,The Guard Tower,A spiral stone staircase inside a narrow tower with arrow slits,The climb is steep. From here you can see the dark clouds gathering North.,Spyglass
+S1,0,-1,The Moat Path,A narrow muddy path alongside dark water with lily pads,The water ripples ominously. Something is lurking just beneath the surface.,Fishing Net
