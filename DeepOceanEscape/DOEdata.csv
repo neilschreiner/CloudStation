@@ -1,1 +1,6 @@
-RoomID, X, Y, Title, ImagePrompt, Description, Item
+RoomID,X,Y,Title,ImagePrompt,Description,Item
+Start,0,0,The Observation Deck,A cracked glass window showing deep blue water and tiny bubbles,The emergency lights are flickering. The sub is groaning under the pressure.,Flashlight
+W1,-1,0,Air Lock,A heavy metal circular door with a manual wheel lock,The room is half-flooded. A heavy wrench sits at the bottom of the puddle.,Heavy Wrench
+N1,0,1,Engine Room,Massive humming turbines with sparks flying from a broken panel,The core is overheating. You need to find a coolant leak fast.,Coolant Cell
+S1,0,-1,Storage Locker,Narrow shelves filled with rusted canisters and emergency kits,Most of the supplies are ruined, but a flare gun remains dry.,Flare Gun
+E1,1,0,The Trench,A dark underwater abyss visible through a porthole with bioluminescent fish,The beauty of the glowing fish hides the danger of the deep.,Sonar Map
