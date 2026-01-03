@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CloudStation Player</title>
+    <style>
+        :root {
+            --bg: #0f172a; --panel: #1e293b; --accent: #38bdf8; --text: #f8fafc;
+            --hp: #ef4444; --mp: #8b5cf6;
+        }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); margin: 0; display: flex; justify-content: center; padding: 20px; }
+        
+        .game-container { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 15px; }
+        
+        /* Image Viewport */
+        .viewport { 
+            width: 100%; aspect-ratio: 1/1; background: #000; border: 2px solid var(--accent); 
+            border-radius: 12px; display: flex; align-items: center; justify-content: center; position: relative;
+            background-size: cover; background-position: center;
+        }
+        .coord-display { position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); padding: 5px 10px; border-radius: 5px; font-size: 12px; }
+
+        /* Controls */
+        .controls { display: flex; justify-content: center; padding: 10px; }
+        .d-pad { display: grid; grid-template-columns: repeat(3, 65px); grid-template-rows: repeat(3, 65px); gap: 10px; }
+        .d-btn { background: var(--panel); border: 2px solid var(--accent); color: white; border-radius: 8px; cursor: pointer; font-size: 1.2rem; font-weight: bold; }
+        .d-btn:active { background: var(--accent); color: black; }
+
+        /* Text Area */
+        .description-box { background: var(--panel); padding: 20px; border-radius: 12px; border-left: 4px solid var(--accent); min-height: 100px; }
+        .inventory-box { font-size: 0.8rem; color: var(--accent); margin-top: 10px; font-style: italic; }
+
+        /* Stats */
+        .stats-bar { display: flex; justify-content: space-around; background: #020617; padding: 15px; border-radius: 12px; text-align: center; }
+        .stat span { display: block; font-size: 1.1rem; font-weight: bold; }
+        
+        .nav-back { text-align: center; margin-top: 10px; }
+        .nav-back a { color: #64748b; text-decoration: none; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+    <div class="viewport" id="view">
+        <div class="coord-display" id="coords">X: 0, Y: 0</div>
+        <div id="prompt-overlay" style="padding:20px; text-align:center; color:#475569;">Loading World...</div>
+    </div>
+
+    <div class="controls">
+        <div class="d-pad">
+            <button class="d-btn" style="grid-column:2" onclick="move(0,1)">N</button>
+            <button class="d-btn" style="grid-column:1; grid-row:2" onclick="move(-1,0)">W</button>
+            <button class="d-btn" style="grid-column:3; grid-row:2" onclick="move(1,0)">E</button>
+            <button class="d-btn" style="grid-column:2; grid-row:3" onclick="move(0,-1)">S</button>
+        </div>
+    </div>
+
+    <div class="description-box">
+        <h3 id="title" style="margin:0 0 10px 0;">---</h3>
+        <p id="desc" style="margin:0; line-height:1.5;"></p>
+        <div id="inventory" class="inventory-box">Inventory: Empty</div>
+    </div>
+
+    <div class="stats-bar">
+        <div class="stat">PLAYER <span id="display-name">Guest</span></div>
+        <div class="stat">HP <span style="color:var(--hp)">100</span></div>
+        <div class="stat">MP <span style="color:var(--mp)">50</span></div>
+    </div>
+
+    <div class="nav-back">
+        <a href="../index.html">⬅ Eject Cartridge (Return to Console)</a>
+    </div>
+</div>
+
+<script>
+    let worldMap = {};
+    let currentX = 0;
+    let currentY = 0;
+    let playerName = "Guest";
+    let inventory = [];
+    let gameID = window.location.pathname.split('/').filter(Boolean).pop(); // Gets folder name
+
+    // 1. DATA PARSING (Includes Items)
+    function parseCSV(text) {
+        const lines = text.split('\n');
+        for(let i = 1; i < lines.length; i++) {
+            const cols = lines[i].split(',');
+            if(cols.length >= 6) {
+                worldMap[`${cols[1].trim()},${cols[2].trim()}`] = {
+                    title: cols[3].replace(/"/g, ""),
+                    prompt: cols[4].replace(/"/g, ""),
+                    desc: cols[5].replace(/"/g, ""),
+                    item: cols[6] ? cols[6].trim().replace(/"/g, "") : null
+                };
+            }
+        }
+        updateUI();
+    }
+
+    // 2. MOVEMENT & ITEM LOGIC
+    function move(dx, dy) {
+        currentX += dx;
+        currentY += dy;
+        
+        const room = worldMap[`${currentX},${currentY}`];
+        if (room && room.item && !inventory.includes(room.item)) {
+            inventory.push(room.item);
+            alert(`You found: ${room.item}!`);
+        }
+        
+        saveProgress();
+        updateUI();
+    }
+
+    // 3. UI & SAVING
+    function updateUI() {
+        const room = worldMap[`${currentX},${currentY}`];
+        document.getElementById('coords').innerText = `X: ${currentX}, Y: ${currentY}`;
+        document.getElementById('display-name').innerText = playerName;
+        document.getElementById('inventory').innerText = "Inventory: " + (inventory.length ? inventory.join(", ") : "Empty");
+
+        if (room) {
+            document.getElementById('title').innerText = room.title;
+            document.getElementById('desc').innerText = room.desc;
+            document.getElementById('prompt-overlay').innerText = "Visualizing: " + room.prompt;
+        } else {
+            document.getElementById('title').innerText = "The Void";
+            document.getElementById('desc').innerText = "There is nothing here.";
+        }
+    }
+
+    function saveProgress() {
+        const saveKey = `save_${playerName}_${gameID}`;
+        const data = { x: currentX, y: currentY, items: inventory };
+        localStorage.setItem(saveKey, JSON.stringify(data));
+    }
+
+    // 4. INITIALIZATION
+    window.onload = async function() {
+        // Get username from Console
+        playerName = localStorage.getItem('cloudstation_user') || "Guest";
+        
+        // Load Saved Game
+        const saved = localStorage.getItem(`save_${playerName}_${gameID}`);
+        if (saved) {
+            const data = JSON.parse(saved);
+            currentX = data.x;
+            currentY = data.y;
+            inventory = data.items || [];
+        }
+
+        // Fetch the CSV (Ensure your CSV is in the same folder as this index.html)
+        try {
+            const response = await fetch('LOMdata.csv'); // Make sure your CSV is named data.csv in each folder
+            const text = await response.text();
+            parseCSV(text);
+        } catch (e) {
+            document.getElementById('prompt-overlay').innerText = "Error: data.csv not found in folder.";
+        }
+    }
+</script>
+
+</body>
+</html>
