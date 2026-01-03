@@ -1,1 +1,6 @@
-RoomID, X, Y, Title, ImagePrompt, Description, Item
+RoomID,X,Y,Title,ImagePrompt,Description,Item
+Start,0,0,Crash Site,A smoking escape pod on a red dusty plain with jagged rocks,The air is thin and your oxygen levels are dropping. The pod is trashed.,O2 Tank
+E1,1,0,Ancient Ridge,A high rocky ridge overlooking a vast orange desert valley,You see something metallic glinting in the distance to the East.,Binoculars
+E2,2,0,Dusty Outpost,A small domed structure partially buried in sand,The door is sealed tight. You need a way to bypass the keypad.,Data Pad
+N1,0,1,The Red Canyon,A deep narrow canyon with steep red walls and strange shadows,It's freezing here. You find a thermal blanket discarded by a previous traveler.,Thermal Wrap
+S1,0,-1,Sulfur Pits,Yellow bubbling pits of acid emitting thick white steam,The smell is overwhelming. You see a titanium scrap piece near the edge.,Titanium Scraps
