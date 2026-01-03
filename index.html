@@ -7,196 +7,114 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #121212;
-            --text-color: #e0e0e0;
+            --header-text: #1a1a1a;
+            --footer-text: #e0e0e0;
             --accent-blue: #38bdf8;
-            --panel-bg: #1e293b;
+            --panel-bg: rgba(30, 41, 59, 0.9);
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            background: linear-gradient(to bottom, #ffffff 0%, #000000 100%);
+            background-attachment: fixed; 
+            color: var(--header-text);
             margin: 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        /* Retro Banner */
-        .banner-container {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            padding: 20px 0;
+        /* --- LOADING OVERLAY --- */
+        #loading-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
             background: #000;
-        }
-
-        .banner-container img {
-            max-width: 600px;
-            width: 90%;
-            height: auto;
-            image-rendering: pixelated;
-        }
-
-        /* Main Console Layout */
-        .main-layout {
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
-            gap: 60px;
-            flex-wrap: wrap;
-            padding: 20px;
-            flex: 1;
-        }
-
-        .console-container {
-            display: flex;
+            display: none;
             flex-direction: column;
+            justify-content: center;
             align-items: center;
-            gap: 20px;
-            width: 500px;
-            max-width: 90vw;
+            z-index: 1000;
+            color: var(--accent-blue);
+            font-family: 'Press Start 2P', cursive;
         }
 
-        .console-container img {
-            width: 100%;
-            filter: drop-shadow(0 0 20px rgba(0,0,0,0.5));
+        .spinner {
+            width: 50px; height: 50px;
+            border: 5px solid #1e293b;
+            border-top: 5px solid var(--accent-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
         }
 
-        /* Player Identity Section */
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* --- UI COMPONENTS --- */
+        .banner-container { width: 100%; display: flex; justify-content: center; padding: 20px 0; }
+        .banner-container img { max-width: 600px; width: 90%; height: auto; image-rendering: pixelated; }
+
+        .main-layout { display: flex; align-items: flex-start; justify-content: center; gap: 60px; flex-wrap: wrap; padding: 20px; flex: 1; }
+
+        .console-container { display: flex; flex-direction: column; align-items: center; gap: 25px; width: 500px; max-width: 95vw; }
+        .console-container img { width: 100%; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.4)); }
+
         .player-identity {
             background: var(--panel-bg);
-            padding: 20px;
-            border-radius: 8px;
-            width: 100%;
-            box-sizing: border-box;
-            border: 1px solid #334155;
-            text-align: center;
+            padding: 25px; border-radius: 12px; width: 100%; box-sizing: border-box;
+            border: 2px solid var(--accent-blue); text-align: center; color: #fff;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
-
-        .player-identity h3 { margin-top: 0; font-size: 0.9rem; color: var(--accent-blue); text-transform: uppercase; }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 15px;
-        }
+        .player-identity h3 { margin-top: 0; font-family: 'Press Start 2P', cursive; font-size: 0.7rem; color: var(--accent-blue); }
 
         .player-identity input {
-            background: #000;
-            color: #fff;
-            border: 1px solid #444;
-            padding: 10px;
-            border-radius: 4px;
-            font-family: 'VT323', monospace;
-            font-size: 1.2rem;
+            width: 90%; background: #000; color: var(--accent-blue); border: 1px solid var(--accent-blue);
+            padding: 12px; border-radius: 4px; font-family: 'VT323', monospace; font-size: 1.4rem; text-align: center;
         }
 
-        .btn-row {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-        }
+        .btn-row { display: flex; gap: 10px; justify-content: center; margin-top: 15px;}
+        .btn { background: var(--accent-blue); color: #000; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.8rem; text-transform: uppercase; }
+        .btn:hover { background: #0ea5e9; transform: scale(1.02); }
 
-        .btn {
-            background: var(--accent-blue);
-            color: #000;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.8rem;
-        }
+        /* --- CARTRIDGES --- */
+        .cartridge-stack { display: flex; flex-direction: column; gap: 30px; align-items: center; }
+        .stack-title { font-family: 'Press Start 2P', cursive; font-size: 1.4rem; color: #000; margin-bottom: 15px; text-align: center; }
 
-        .btn:hover { background: #0ea5e9; }
-
-        /* Cartridge Stack */
-        .cartridge-stack {
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-            align-items: center;
-        }
-
-        .stack-title {
-            font-family: 'Press Start 2P', cursive;
-            font-size: 1.2rem;
-            color: #fff;
-            margin-bottom: 10px;
-            text-shadow: 3px 3px 0px #ef4444;
-            text-align: center;
-        }
-
-        .cart-wrapper { text-align: center; }
-
-        .cartridge-container {
-            position: relative;
-            width: 280px;
-            height: 120px;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-
+        .cartridge-container { position: relative; width: 280px; height: 120px; cursor: pointer; transition: transform 0.2s; }
         .cartridge-container:hover { transform: scale(1.05); }
-
         .cart-img { width: 100%; height: 100%; object-fit: contain; }
 
-        /* Preserve your font choices for labels */
         .cart-label {
-            position: absolute;
-            top: 45%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-weight: bold;
-            width: 80%;
-            pointer-events: none;
-            letter-spacing: 1px;
-            filter: drop-shadow(0px 2px 2px black);
-            text-transform: uppercase;
+            position: absolute; top: 45%; left: 50%; transform: translate(-50%, -50%);
+            font-weight: bold; width: 85%; pointer-events: none;
+            filter: drop-shadow(0px 2px 2px black); text-transform: uppercase;
         }
 
-        /* Cartridge-specific styles */
         #knights-label { font-family: 'Press Start 2P', cursive; color: #f59e0b; font-size: 0.8rem; }
-        #mars-label { font-family: 'VT323', monospace; color: #ef4444; font-size: 1.5rem; }
+        #mars-label { font-family: 'VT323', monospace; color: #ef4444; font-size: 1.6rem; }
         #ocean-label { font-family: 'Silkscreen', sans-serif; color: #38bdf8; font-size: 1.1rem; }
 
-        .cart-links {
-            margin-top: 10px;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            font-size: 0.9rem;
-        }
+        .cart-links { margin-top: 10px; display: flex; justify-content: center; gap: 25px; font-size: 0.9rem; font-weight: bold; }
+        .cart-links a { color: #000; text-decoration: none; display: flex; align-items: center; gap: 5px; cursor: pointer; }
+        .cart-links a:hover { color: var(--accent-blue); }
 
-        .cart-links a {
-            color: var(--accent-blue);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        /* Footer */
         footer {
-            width: 100%;
-            max-width: 900px;
-            text-align: center;
-            padding: 40px 20px;
-            border-top: 1px solid #334155;
-            margin-top: 40px;
+            width: 100%; max-width: 900px; text-align: center; padding: 40px 20px;
+            border-top: 1px solid #334155; margin-top: 60px; color: var(--footer-text);
         }
-
-        .footer-links { margin: 15px 0; display: flex; justify-content: center; gap: 20px; }
+        .footer-links { margin: 15px 0; display: flex; justify-content: center; gap: 25px; }
         .footer-links a { color: var(--accent-blue); text-decoration: none; }
-        .last-updated { font-size: 0.8rem; color: #64748b; margin-top: 10px; }
+        .last-updated { font-size: 0.8rem; color: #64748b; margin-top: 15px; }
 
     </style>
 </head>
 <body>
+
+    <div id="loading-overlay">
+        <div class="spinner"></div>
+        <div id="loading-text">ACCESSING MEMORY...</div>
+    </div>
 
     <div class="banner-container">
         <img src="assets/CloudConsoleBanner.gif" alt="Cloud Station Banner">
@@ -213,9 +131,9 @@
                 </div>
                 <div class="btn-row">
                     <button class="btn" onclick="saveUser()">SYNC USER</button>
-                    <button class="btn" onclick="generateUser()">GENERATE ID</button>
+                    <button class="btn" onclick="generateUser()">NEW ID</button>
                 </div>
-                <p id="status-msg" style="font-size: 0.7rem; color: #64748b; margin-top:10px;"></p>
+                <p id="status-msg" style="font-size: 0.7rem; color: var(--accent-blue); margin-top:10px; min-height: 1em;"></p>
             </div>
         </div>
 
@@ -223,35 +141,35 @@
             <div class="stack-title">Choose a game!</div>
 
             <div class="cart-wrapper">
-                <div class="cartridge-container">
+                <div class="cartridge-container" onclick="playGame('KnightsQuest/index.html')">
                     <img src="assets/cartridge.jpg" class="cart-img">
                     <div class="cart-label" id="knights-label">Knights Quest</div>
                 </div>
                 <div class="cart-links">
-                    <a href="GameInfo.html#knights">ℹ Info</a>
-                    <a href="KnightsQuest/index.html">🕹 Play Game</a>
+                    <a href="GameInfo.html#knights">🛈 Info</a>
+                    <a onclick="playGame('KnightsQuest/index.html')">🕹 Play Game</a>
                 </div>
             </div>
 
             <div class="cart-wrapper">
-                <div class="cartridge-container">
+                <div class="cartridge-container" onclick="playGame('LostOnMars/index.html')">
                     <img src="assets/cartridge.jpg" class="cart-img">
                     <div class="cart-label" id="mars-label">Lost On Mars</div>
                 </div>
                 <div class="cart-links">
-                    <a href="GameInfo.html#mars">ℹ Info</a>
-                    <a href="LostOnMars/index.html">🕹 Play Game</a>
+                    <a href="GameInfo.html#mars">🛈 Info</a>
+                    <a onclick="playGame('LostOnMars/index.html')">🕹 Play Game</a>
                 </div>
             </div>
 
             <div class="cart-wrapper">
-                <div class="cartridge-container">
+                <div class="cartridge-container" onclick="playGame('DeepOceanEscape/index.html')">
                     <img src="assets/cartridge.jpg" class="cart-img">
                     <div class="cart-label" id="ocean-label">Deep Ocean Escape</div>
                 </div>
                 <div class="cart-links">
-                    <a href="GameInfo.html#ocean">ℹ Info</a>
-                    <a href="DeepOceanEscape/index.html">🕹 Play Game</a>
+                    <a href="GameInfo.html#ocean">🛈 Info</a>
+                    <a onclick="playGame('DeepOceanEscape/index.html')">🕹 Play Game</a>
                 </div>
             </div>
         </div>
@@ -267,20 +185,48 @@
     </footer>
 
     <script>
+        const overlay = document.getElementById('loading-overlay');
+        const loadText = document.getElementById('loading-text');
+
+        function showLoading(msg, callback) {
+            loadText.innerText = msg;
+            overlay.style.display = 'flex';
+            setTimeout(() => {
+                if(callback) callback();
+                overlay.style.display = 'none';
+            }, 1200);
+        }
+
         function saveUser() {
             const name = document.getElementById('username').value.trim();
             if (name) {
-                localStorage.setItem('cloudstation_user', name);
-                document.getElementById('status-msg').innerText = "Identity synced to memory core.";
+                showLoading("SYNCING IDENTITY...", () => {
+                    localStorage.setItem('cloudstation_user', name);
+                    document.getElementById('status-msg').innerText = "SYSTEM: Identity locked to memory.";
+                });
             }
         }
 
         function generateUser() {
-            const prefixes = ["CHIP", "PIXEL", "NOVA", "BYTE", "NEO"];
-            const id = Math.floor(1000 + Math.random() * 9000);
-            const generatedName = prefixes[Math.floor(Math.random() * prefixes.length)] + "-" + id;
-            document.getElementById('username').value = generatedName;
-            saveUser();
+            showLoading("GENERATING NEW ID...", () => {
+                const prefixes = ["CHIP", "PIXEL", "NOVA", "BYTE", "NEO", "GRID"];
+                const id = Math.floor(1000 + Math.random() * 9000);
+                const genName = prefixes[Math.floor(Math.random() * prefixes.length)] + "-" + id;
+                document.getElementById('username').value = genName;
+                localStorage.setItem('cloudstation_user', genName);
+                document.getElementById('status-msg').innerText = "SYSTEM: New ID generated.";
+            });
+        }
+
+        function playGame(url) {
+            const name = document.getElementById('username').value.trim();
+            if (!name) {
+                document.getElementById('status-msg').innerText = "ERROR: NAME REQUIRED TO PLAY";
+                return;
+            }
+            showLoading("LOADING CARTRIDGE...", () => {
+                window.location.href = url;
+            });
         }
 
         window.onload = function() {
