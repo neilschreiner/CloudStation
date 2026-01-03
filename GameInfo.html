@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Information - CloudStation</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --accent-blue: #38bdf8;
+            --panel-bg: #1e293b;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            background-color: var(--panel-bg);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        h1 {
+            color: var(--accent-blue);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .game-section {
+            padding: 20px 0;
+            border-bottom: 1px dashed #334155;
+            margin-bottom: 30px;
+        }
+
+        .game-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        h2 {
+            color: var(--text-color);
+            border-left: 4px solid var(--accent-blue);
+            padding-left: 10px;
+            margin-bottom: 15px;
+        }
+
+        p {
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 30px;
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .back-link:hover { text-decoration: underline; }
+
+        /* Specific styles for game themes if needed */
+        #knights h2 { color: #f59e0b; border-color: #f59e0b; }
+        #mars h2 { color: #ef4444; border-color: #ef4444; }
+        #ocean h2 { color: #38bdf8; border-color: #38bdf8; }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>CloudStation Game Information</h1>
+
+        <div id="knights" class="game-section">
+            <h2>Knights Quest</h2>
+            <p>Embark on an epic journey through a medieval realm filled with enchanted forests, treacherous castles, and mythical beasts. As a noble knight, you must recover the legendary Sword of Eldoria before the dark lord's shadow consumes the land.</p>
+            <p><strong>Goal:</strong> Find the Sword of Eldoria and defeat the Shadow King.</p>
+            <p><strong>Key Features:</strong> Classic fantasy setting, challenging puzzles, NPC interactions.</p>
+        </div>
+
+        <div id="mars" class="game-section">
+            <h2>Lost On Mars</h2>
+            <p>You are the sole survivor of a botched colonization mission on Mars. Stranded and alone, you must navigate the barren, hostile landscape, scavenge for resources, and repair your emergency beacon before your oxygen runs out.</p>
+            <p><strong>Goal:</strong> Repair the communication array and signal for rescue.</p>
+            <p><strong>Key Features:</strong> Sci-fi survival, resource management, exploration of Martian ruins.</p>
+        </div>
+
+        <div id="ocean" class="game-section">
+            <h2>Deep Ocean Escape</h2>
+            <p>Trapped in a damaged submersible miles beneath the ocean's surface, you must guide your crew through a terrifying abyss. Encounter strange bioluminescent creatures, ancient underwater ruins, and the crushing pressure of the deep as you search for a way to the surface.</p>
+            <p><strong>Goal:</strong> Navigate the deep ocean and reach the surface before the sub implodes.</p>
+            <p><strong>Key Features:</strong> Underwater horror, atmospheric tension, unique environmental challenges.</p>
+        </div>
+
+        <a href="index.html" class="back-link">⬅ Back to CloudStation Console</a>
+    </div>
+
+</body>
+</html>
