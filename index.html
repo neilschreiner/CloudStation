@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CloudStation Console</title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --text-color: #e0e0e0;
+            --accent-blue: #38bdf8;
+            --panel-bg: #1e293b;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* User Header */
+        .user-section {
+            width: 100%;
+            padding: 20px;
+            text-align: right;
+            box-sizing: border-box;
+        }
+
+        /* Main Console Area */
+        .main-layout {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 50px;
+            flex-wrap: wrap;
+            padding: 40px;
+            flex: 1;
+        }
+
+        .console-display {
+            width: 500px;
+            max-width: 90vw;
+        }
+
+        .console-display img {
+            width: 100%;
+            filter: drop-shadow(0 0 20px rgba(0,0,0,0.5));
+        }
+
+        /* Cartridge Stack */
+        .cartridge-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .cart-wrapper {
+            text-align: center;
+        }
+
+        .cartridge-container {
+            position: relative;
+            width: 280px;
+            height: 120px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .cartridge-container:hover {
+            transform: scale(1.05);
+        }
+
+        .cart-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .cart-label {
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            width: 80%;
+            pointer-events: none;
+        }
+
+        .cart-links {
+            margin-top: 10px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            font-size: 0.9rem;
+        }
+
+        .cart-links a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .cart-links a:hover { text-decoration: underline; }
+
+        /* Footer */
+        footer {
+            width: 100%;
+            max-width: 900px;
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid #334155;
+            margin-top: 40px;
+        }
+
+        .footer-links {
+            margin: 15px 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a { color: var(--accent-blue); text-decoration: none; }
+        .last-updated { font-size: 0.8rem; color: #64748b; margin-top: 10px; }
+
+    </style>
+</head>
+<body>
+
+    <div class="user-section">
+        <label>Player: </label>
+        <input type="text" id="username" placeholder="Enter Username..." onchange="saveUser()" style="background:#000; color:#fff; border:1px solid #444; padding:5px; border-radius:4px;">
+    </div>
+
+    <div class="main-layout">
+        <div class="console-display">
+            <img src="assets/console.png" alt="CloudStation Console">
+        </div>
+
+        <div class="cartridge-stack">
+            
+            <div class="cart-wrapper">
+                <div class="cartridge-container">
+                    <img src="assets/cartridge.png" class="cart-img">
+                    <div class="cart-label" style="color: #f59e0b;">Knights Quest</div>
+                </div>
+                <div class="cart-links">
+                    <a href="GameInfo.html#knights">ℹ Info</a>
+                    <a href="KnightsQuest/index.html">🕹 Play Game</a>
+                </div>
+            </div>
+
+            <div class="cart-wrapper">
+                <div class="cartridge-container">
+                    <img src="assets/cartridge.png" class="cart-img">
+                    <div class="cart-label" style="color: #ef4444;">Lost On Mars</div>
+                </div>
+                <div class="cart-links">
+                    <a href="GameInfo.html#mars">ℹ Info</a>
+                    <a href="LostOnMars/index.html">🕹 Play Game</a>
+                </div>
+            </div>
+
+            <div class="cart-wrapper">
+                <div class="cartridge-container">
+                    <img src="assets/cartridge.png" class="cart-img">
+                    <div class="cart-label" style="color: #38bdf8;">Deep Ocean Escape</div>
+                </div>
+                <div class="cart-links">
+                    <a href="GameInfo.html#ocean">ℹ Info</a>
+                    <a href="DeepOceanEscape/index.html">🕹 Play Game</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+        <p><strong>CloudStation</strong> is a picture-based adventure game system designed for immersive storytelling across diverse worlds.</p>
+        
+        <div class="footer-links">
+            <a href="https://neilschreiner.github.io/">Main GitHub</a>
+            <a href="https://github.com/neilschreiner/CloudStation/blob/main/LICENSE">Creative Commons BY-NC 4.0</a>
+        </div>
+
+        <div class="last-updated">Last Updated: <span id="last-updated">Loading...</span></div>
+    </footer>
+
+    <script>
+        // Save Username Logic
+        function saveUser() {
+            const name = document.getElementById('username').value;
+            localStorage.setItem('cloudstation_user', name);
+        }
+
+        window.onload = function() {
+            const savedName = localStorage.getItem('cloudstation_user');
+            if (savedName) document.getElementById('username').value = savedName;
+
+            // Fetch GitHub Repo Update Time
+            fetch('https://api.github.com/repos/neilschreiner/CloudStation')
+              .then(response => response.json())
+              .then(data => {
+                const lastUpdated = new Date(data.pushed_at);
+                const formattedDate = lastUpdated.toLocaleDateString() + ' ' + lastUpdated.toLocaleTimeString();
+                document.getElementById('last-updated').textContent = formattedDate;
+              })
+              .catch(error => console.error('Error fetching data:', error));
+        }
+    </script>
+</body>
+</html>
