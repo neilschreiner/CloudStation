@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"> 
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="fonts.googleapis.com" rel="stylesheet">
     <title>CloudStation Console</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-color: #121212;
@@ -24,45 +24,114 @@
             min-height: 100vh;
         }
 
-        /* User Header */
-        .user-section {
+        /* Retro Banner */
+        .banner-container {
             width: 100%;
-            padding: 20px;
-            text-align: right;
-            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            padding: 20px 0;
+            background: #000;
         }
 
-        /* Main Console Area */
+        .banner-container img {
+            max-width: 600px;
+            width: 90%;
+            height: auto;
+            image-rendering: pixelated;
+        }
+
+        /* Main Console Layout */
         .main-layout {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
-            gap: 50px;
+            gap: 60px;
             flex-wrap: wrap;
-            padding: 40px;
+            padding: 20px;
             flex: 1;
         }
 
-        .console-display {
+        .console-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
             width: 500px;
             max-width: 90vw;
         }
 
-        .console-display img {
+        .console-container img {
             width: 100%;
             filter: drop-shadow(0 0 20px rgba(0,0,0,0.5));
         }
+
+        /* Player Identity Section */
+        .player-identity {
+            background: var(--panel-bg);
+            padding: 20px;
+            border-radius: 8px;
+            width: 100%;
+            box-sizing: border-box;
+            border: 1px solid #334155;
+            text-align: center;
+        }
+
+        .player-identity h3 { margin-top: 0; font-size: 0.9rem; color: var(--accent-blue); text-transform: uppercase; }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .player-identity input {
+            background: #000;
+            color: #fff;
+            border: 1px solid #444;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: 'VT323', monospace;
+            font-size: 1.2rem;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn {
+            background: var(--accent-blue);
+            color: #000;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        .btn:hover { background: #0ea5e9; }
 
         /* Cartridge Stack */
         .cartridge-stack {
             display: flex;
             flex-direction: column;
-            gap: 30px;
+            gap: 25px;
+            align-items: center;
         }
 
-        .cart-wrapper {
+        .stack-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.2rem;
+            color: #fff;
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 0px #ef4444;
             text-align: center;
         }
+
+        .cart-wrapper { text-align: center; }
 
         .cartridge-container {
             position: relative;
@@ -72,28 +141,28 @@
             transition: transform 0.2s;
         }
 
-        .cartridge-container:hover {
-            transform: scale(1.05);
-        }
+        .cartridge-container:hover { transform: scale(1.05); }
 
-        .cart-img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
+        .cart-img { width: 100%; height: 100%; object-fit: contain; }
 
+        /* Preserve your font choices for labels */
         .cart-label {
             position: absolute;
             top: 45%;
             left: 50%;
             transform: translate(-50%, -50%);
             font-weight: bold;
-            font-size: 1.2rem;
-            color: #fff;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
             width: 80%;
             pointer-events: none;
+            letter-spacing: 1px;
+            filter: drop-shadow(0px 2px 2px black);
+            text-transform: uppercase;
         }
+
+        /* Cartridge-specific styles */
+        #knights-label { font-family: 'Press Start 2P', cursive; color: #f59e0b; font-size: 0.8rem; }
+        #mars-label { font-family: 'VT323', monospace; color: #ef4444; font-size: 1.5rem; }
+        #ocean-label { font-family: 'Silkscreen', sans-serif; color: #38bdf8; font-size: 1.1rem; }
 
         .cart-links {
             margin-top: 10px;
@@ -111,8 +180,6 @@
             gap: 5px;
         }
 
-        .cart-links a:hover { text-decoration: underline; }
-
         /* Footer */
         footer {
             width: 100%;
@@ -123,14 +190,7 @@
             margin-top: 40px;
         }
 
-        .footer-links {
-            margin: 15px 0;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
+        .footer-links { margin: 15px 0; display: flex; justify-content: center; gap: 20px; }
         .footer-links a { color: var(--accent-blue); text-decoration: none; }
         .last-updated { font-size: 0.8rem; color: #64748b; margin-top: 10px; }
 
@@ -138,25 +198,37 @@
 </head>
 <body>
 
-    <div class="user-section">
-        <label>Player: </label>
-        <input type="text" id="username" placeholder="Enter Username..." onchange="saveUser()" style="background:#000; color:#fff; border:1px solid #444; padding:5px; border-radius:4px;">
+    <div class="banner-container">
+        <img src="assets/CloudConsoleBanner.gif" alt="Cloud Station Banner">
     </div>
 
     <div class="main-layout">
-        <div class="console-display">
+        <div class="console-container">
             <img src="assets/console.jpg" alt="CloudStation Console">
+            
+            <div class="player-identity">
+                <h3>Identity Management</h3>
+                <div class="input-group">
+                    <input type="text" id="username" placeholder="NAME REQUIRED...">
+                </div>
+                <div class="btn-row">
+                    <button class="btn" onclick="saveUser()">SYNC USER</button>
+                    <button class="btn" onclick="generateUser()">GENERATE ID</button>
+                </div>
+                <p id="status-msg" style="font-size: 0.7rem; color: #64748b; margin-top:10px;"></p>
+            </div>
         </div>
 
         <div class="cartridge-stack">
-            
+            <div class="stack-title">Choose a game!</div>
+
             <div class="cart-wrapper">
                 <div class="cartridge-container">
                     <img src="assets/cartridge.jpg" class="cart-img">
-                    <div class="cart-label" style="color: #f59e0b; font-family: 'MedievalSharp', cursive, sans-serif;">Knights Quest</div>
+                    <div class="cart-label" id="knights-label">Knights Quest</div>
                 </div>
                 <div class="cart-links">
-                    <a href="GameInfo.html#knights">ⓘ Info</a>
+                    <a href="GameInfo.html#knights">ℹ Info</a>
                     <a href="KnightsQuest/index.html">🕹 Play Game</a>
                 </div>
             </div>
@@ -164,10 +236,10 @@
             <div class="cart-wrapper">
                 <div class="cartridge-container">
                     <img src="assets/cartridge.jpg" class="cart-img">
-                    <div class="cart-label" style="color: #ef4444; font-family: 'Oxanium', cursive;">Lost On Mars</div>
+                    <div class="cart-label" id="mars-label">Lost On Mars</div>
                 </div>
                 <div class="cart-links">
-                    <a href="GameInfo.html#mars">ⓘ Info</a>
+                    <a href="GameInfo.html#mars">ℹ Info</a>
                     <a href="LostOnMars/index.html">🕹 Play Game</a>
                 </div>
             </div>
@@ -175,40 +247,46 @@
             <div class="cart-wrapper">
                 <div class="cartridge-container">
                     <img src="assets/cartridge.jpg" class="cart-img">
-                    <div class="cart-label" style="color: #38bdf8; font-family: 'Maven Pro', sans-serif;">Deep Ocean Escape</div>
+                    <div class="cart-label" id="ocean-label">Deep Ocean Escape</div>
                 </div>
                 <div class="cart-links">
-                    <a href="GameInfo.html#ocean">ⓘ Info</a>
+                    <a href="GameInfo.html#ocean">ℹ Info</a>
                     <a href="DeepOceanEscape/index.html">🕹 Play Game</a>
                 </div>
             </div>
-
         </div>
     </div>
 
     <footer>
         <p><strong>CloudStation</strong> is a picture-based adventure game system designed for immersive storytelling across diverse worlds.</p>
-        
         <div class="footer-links">
             <a href="https://neilschreiner.github.io/">Main GitHub</a>
             <a href="https://github.com/neilschreiner/CloudStation/blob/main/LICENSE">Creative Commons BY-NC 4.0</a>
         </div>
-
         <div class="last-updated">Last Updated: <span id="last-updated">Loading...</span></div>
     </footer>
 
     <script>
-        // Save Username Logic
         function saveUser() {
-            const name = document.getElementById('username').value;
-            localStorage.setItem('cloudstation_user', name);
+            const name = document.getElementById('username').value.trim();
+            if (name) {
+                localStorage.setItem('cloudstation_user', name);
+                document.getElementById('status-msg').innerText = "Identity synced to memory core.";
+            }
+        }
+
+        function generateUser() {
+            const prefixes = ["CHIP", "PIXEL", "NOVA", "BYTE", "NEO"];
+            const id = Math.floor(1000 + Math.random() * 9000);
+            const generatedName = prefixes[Math.floor(Math.random() * prefixes.length)] + "-" + id;
+            document.getElementById('username').value = generatedName;
+            saveUser();
         }
 
         window.onload = function() {
             const savedName = localStorage.getItem('cloudstation_user');
             if (savedName) document.getElementById('username').value = savedName;
 
-            // Fetch GitHub Repo Update Time
             fetch('https://api.github.com/repos/neilschreiner/CloudStation')
               .then(response => response.json())
               .then(data => {
